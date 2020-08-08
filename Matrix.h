@@ -25,7 +25,7 @@ public:
     void FillMatrix();
     //Input: A row and a multiple
     //Output: changed the row to Row * multiple
-    void MultiplyRows(vector < double >&, double);
+    void MultiplyRow(vector < double > &row, double multiplier);
     //Input: two rows and a multiple
     //Output: changes the first row to Row1 + (Multple * Row2)
     void AddRows(vector < double >&, const vector < double >&, const double&);
