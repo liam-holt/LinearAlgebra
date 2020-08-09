@@ -36,18 +36,23 @@ int main() {
                 break;
         }
 
-        cout << "Would you like to do something else? (y/n)\n";
-        getline(cin,restart);
+        int replay = -1;
 
-        for (char& i : restart) {
-            i = tolower(i);
-        }
+        while (choice != quit && choice != replay) {
 
-        if (restart == "y" || restart == "yes") {
-            choice = 1;
-        }
-        else {
-            choice = quit;
+
+            cout << "Would you like to do something else? (y/n)\n";
+            getline(cin, restart);
+
+            for (char &i : restart) {
+                i = tolower(i);
+            }
+
+            if (restart == "y" || restart == "yes") {
+                choice = replay;
+            } else if (restart == "n" || restart == "no") {
+                choice = quit;
+            }
         }
 
     } while (choice != quit);
@@ -120,7 +125,7 @@ int MainMenu() {
              << "1. Reduced Row Eschalon Form\n"
              << "2. Matrix Multiplication\n"
              << "3. Determinant\n"
-             << "3. Quit\n";
+             << "4. Quit\n";
 
         cin >> choice;
         cin.clear();
