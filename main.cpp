@@ -4,7 +4,7 @@
 
 using namespace  std;
 
-enum choices {reducedRowEschalon=1, multiply, quit};
+enum choices {reducedRowEschalon=1, multiply, determinant, quit};
 
 //Input: A string for "row" or "column"
 //Output: User input for their dimension size
@@ -13,6 +13,7 @@ int GetDimension(const string& dimension);
 int MainMenu();
 void ReducedRowEschalon();
 void MatrixMultiplication();
+void Determinant();
 
 int main() {
     int choice;
@@ -27,6 +28,9 @@ int main() {
                 break;
             case multiply:
                 MatrixMultiplication();
+                break;
+            case determinant:
+                Determinant();
                 break;
             default:
                 break;
@@ -113,8 +117,9 @@ int MainMenu() {
     int choice;
     do {
         cout << "What would you like to do?\n"
-             << "1. Reduced Row Eschalon Form \n"
-             << "2. Matrix Multiplication \n"
+             << "1. Reduced Row Eschalon Form\n"
+             << "2. Matrix Multiplication\n"
+             << "3. Determinant\n"
              << "3. Quit\n";
 
         cin >> choice;
@@ -169,4 +174,22 @@ void MatrixMultiplication(){
     cout << "\nMatrix A x B: \n";
     matrixAxB.PrintMatrix();
     cout << endl;
+}
+
+void Determinant () {
+    int rows = GetDimension("rows and columns");
+    int columns = rows;
+
+    Matrix matrix(rows, columns);
+    matrix.FillMatrix();
+
+    cout << "Matrix A:\n";
+    matrix.PrintMatrix();
+
+    double determinant = matrix.Determinent(matrix);
+
+    cout << "|A| :\n" << determinant << endl;
+
+
+
 }

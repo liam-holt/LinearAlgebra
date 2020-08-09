@@ -34,6 +34,8 @@ public:
     void SwapRows (vector < double >&, vector < double >&);
     //Converts matrix to reduced row echelon form
     void ReducedRowEchelon();
+    //Recursive Function to find Determinant
+    double Determinent(const Matrix&);
 
     //Overloaded operators
     Matrix& operator= (const Matrix& m);
