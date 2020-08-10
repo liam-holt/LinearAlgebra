@@ -135,103 +135,44 @@ void Matrix :: ReducedRowEchelon() {
             pivot++;
 
         }
-
     }
 }
 
-//WIP
-double Matrix :: Determinent(const Matrix& matrix) {
+//
+double Matrix :: Determinant(const Matrix& matrix) {
     //Det(A_11) = A_11
     if (matrix.rows <= 1 && matrix.columns <= 1) {
         return matrix.matrix[0][0];
     }
     else {
-        double sum = 0;
+        double sum = 0.0;
         //make a smaller matrix out of the non-pivot rows/columns
         for (unsigned int pivot = 0; pivot < matrix.columns; ++pivot) {
             Matrix temp (matrix.rows - 1, matrix.columns - 1);
-            unsigned int largerRow = 1;
-            unsigned int largerCol = 0;
-            unsigned int smallerRow = 0;
-            unsigned int smallerCol = 0;
+            unsigned int largerRow = 1, largerCol, smallerRow = 0, smallerCol;
 
             while (smallerRow < temp.rows) {
-                smallerCol = 0;
-                largerCol = 0;
-                if (Verbose) {
-                    cout << "Outer" << endl;
-                }
+                smallerCol = 0, largerCol = 0;
+
                 while (smallerCol < temp.columns) {
-                    if (Verbose) {
-                        cout << "Inner" << endl;
-                    }
-                    if (!Verbose) {
-                        cout << "smallCol : " << smallerCol << endl <<
-                             "TempCol : " << temp.columns << endl <<
-                             "LargeCol : " << largerCol << endl;
-
-                        cout << "smallRow : " << smallerRow << endl <<
-                             "TempRow : " << temp.rows << endl <<
-                             "LargeRo : " << largerRow << endl;
-
-
-                    }
                     // don't copy values in pivot col
                     if (largerCol == pivot) {
                         largerCol++;
                     }
                     temp.matrix.at(smallerRow).at(smallerCol) = \
                         matrix.matrix.at(largerRow).at(largerCol);
-                    if (Verbose) {
-                        cout << "\nBuilding sub-matrix\n";
-                        cout << "temp @ " << smallerRow << "," << smallerCol <<
-                             " = " << "matrix @ " << largerRow << ","
-                             << largerCol <<
-                             "(" << matrix.matrix.at(largerRow).at(largerCol)
-                             << ")"
-                             << endl;
-                    }
-                    temp.PrintMatrix();
-                    cout << endl;
-
-
-                    largerCol++;
-                    smallerCol++;
+                    largerCol++, smallerCol++;
                 }
-                if (!Verbose) {
-                    cout << "LargeRowIt : " << largerRow << endl <<
-                    "SmallRowIt : " << smallerRow << endl;
-                }
-                largerRow++;
-                smallerRow++;
-                if (!Verbose) {
-                    cout << "LargeRowIt : " << largerRow << endl <<
-                         "SmallRowIt : " << smallerRow << endl;
-                }
-            }
-            if (Verbose) {
-                cout << "\nTemp Matrix:\n";
-                temp.PrintMatrix();
-                cout << endl;
+                largerRow++, smallerRow++;
             }
             //if pivot is even
-            if (! pivot % 2) {
-                if (!Verbose) {
-                    cout << "\nStep Total (plus "
-                    << matrix.matrix.at(0).at(pivot) << ") = " << sum << endl;
-                }
-                sum += matrix.matrix.at(0).at(pivot) * Determinent(temp);
-
+            if (! (pivot % 2)) {
+                sum += matrix.matrix.at(0).at(pivot) * Determinant(temp);
             }
             else {
-                if (!Verbose) {
-                    cout << "\nStep Total (minus "
-                    << matrix.matrix.at(0).at(pivot) << ") = " << sum << endl;
-                }
-                sum -= matrix.matrix.at(0).at(pivot) * Determinent(temp);
+                sum += -1 * matrix.matrix.at(0).at(pivot) * Determinant(temp);
             }
         }
-
         return sum;
     }
 }

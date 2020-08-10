@@ -191,7 +191,7 @@ void Determinant () {
     cout << "Matrix A:\n";
     matrix.PrintMatrix();
 
-    double determinant = matrix.Determinent(matrix);
+    double determinant = matrix.Determinant(matrix);
 
     cout << "|A| :\n" << determinant << endl;
 

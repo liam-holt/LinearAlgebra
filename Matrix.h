@@ -35,7 +35,7 @@ public:
     //Converts matrix to reduced row echelon form
     void ReducedRowEchelon();
     //Recursive Function to find Determinant
-    double Determinent(const Matrix&);
+    double Determinant(const Matrix &matrix);
 
     //Overloaded operators
     Matrix& operator= (const Matrix& m);
