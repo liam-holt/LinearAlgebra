@@ -54,7 +54,6 @@ public:
 private:
     int rows;
     int columns;
-
     vector < vector < double > > matrix;
 
 };
