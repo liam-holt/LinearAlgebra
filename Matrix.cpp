@@ -6,36 +6,37 @@ const bool Verbose = false; //debugging
 
 #include "Matrix.h"
 
-Matrix :: Matrix()
-    : rows(1), columns(1){}
+Matrix::Matrix()
+        : rows(1), columns(1)
+{}
 
-Matrix :: Matrix (int rows, int columns)
-    : rows(rows), columns(columns)
+Matrix::Matrix(int rows, int columns)
+        : rows(rows), columns(columns)
 {
     //build matrix
-    for (int i = 0; i < rows; ++i)
+    for (int row = 0; row < rows; ++row)
     {
-        vector < double > temp (columns, 0);
+        vector<double> temp(columns, 0);
         matrix.push_back(temp);
     }
 }
 
-void Matrix :: PrintMatrix()
+void Matrix::PrintMatrix()
 {
-    for (auto& it : matrix)
+    for (auto& row : matrix)
     {
-        for (auto& ij : it)
+        for (auto& cell : row)
         {
             cout << left << setw(10)
-                 << setprecision(3) << ij << ' ';
+                 << setprecision(3) << cell << ' ';
         }
         cout << endl;
     }
 }
 
-bool Matrix :: Validate (string input)
+bool Matrix::Validate(string input)
 {
-    bool firstDot = false;
+    bool hasDecimalPoint = false;
     bool valid = true;
 
     //empty string
@@ -44,24 +45,25 @@ bool Matrix :: Validate (string input)
         valid = false;
     }
 
-    for (int i = 0; i < input.length(); ++i)
+    for (int character = 0; character < input.length(); ++character)
     {
         //negative only in front
-        if (input[i] == '-' && i != 0)
+        if (input[character] == '-' && character != 0)
         {
             valid = false;
         }
         //only one decimal
-        if (input[i] == '.' && firstDot)
+        if (input[character] == '.' && hasDecimalPoint)
         {
             valid = false;
         }
-        else if (input[i] == '.')
+        else if (input[character] == '.')
         {
-            firstDot = true;
+            hasDecimalPoint = true;
         }
         //only negatives, decimals, and numbers
-        if (! (isdigit(input[i]) || input[i] == '.' || input[i] == '-') )
+        if (!(isdigit(input[character]) || input[character] == '.'
+              || input[character] == '-'))
         {
             valid = false;
         }
@@ -69,56 +71,57 @@ bool Matrix :: Validate (string input)
     return valid;
 }
 
-void Matrix :: FillMatrix()
+void Matrix::FillMatrix()
 {
     string cell; //user input for each cell
 
-    for (int i = 0; i < rows; ++i)
+    for (int row = 0; row < rows; ++row)
     {
-        for (int j = 0; j < columns; ++j)
+        for (int column = 0; column < columns; ++column)
         {
             do
             {
                 cout << "Please enter a number for cell ("
-                     << i + 1 << "," << j + 1 << ")\n";
+                     << row + 1 << "," << column + 1 << ")\n";
                 getline(cin, cell);
-            } while (cin.fail() || ! Validate(cell));
+            }
+            while (cin.fail() || !Validate(cell));
 
-            matrix.at(i).at(j) = stod(cell);
+            matrix.at(row).at(column) = stod(cell);
         }
     }
 }
 
-void Matrix :: MultiplyRow(vector < double >& row, double multiplier)
+void Matrix::MultiplyRow(vector<double>& row, double multiplier)
 {
-    for (double& i : row)
+    for (double& cell : row)
     {
-        i *= multiplier;
+        cell *= multiplier;
     }
 }
 
-void Matrix :: AddRows(vector < double >& row1, const vector < double >& row2,
-                       const double& multiplier)
+void Matrix::AddRows(vector<double>& row1, const vector<double>& row2,
+                     const double& multiplier)
 {
-    for (unsigned int i = 0; i < row1.size(); ++i)
+    for (unsigned int cell = 0; cell < row1.size(); ++cell)
     {
-        row1.at(i) += multiplier * row2.at(i);
+        row1.at(cell) += multiplier * row2.at(cell);
     }
 }
 
-void Matrix :: SwapRows (vector < double >& row1, vector < double >& row2)
+void Matrix::SwapRows(vector<double>& row1, vector<double>& row2)
 {
     double temp;
 
-    for (unsigned int i = 0; i < row1.size(); ++i)
+    for (unsigned int cell = 0; cell < row1.size(); ++cell)
     {
-        temp = row1.at(i);
-        row1.at(i) = row2.at(i);
-        row2.at(i) = temp;
+        temp = row1.at(cell);
+        row1.at(cell) = row2.at(cell);
+        row2.at(cell) = temp;
     }
 }
 
-void Matrix :: ReducedRowEchelon()
+void Matrix::ReducedRowEchelon()
 {
     int pivot = 0;
     int nonZero;
@@ -152,12 +155,12 @@ void Matrix :: ReducedRowEchelon()
 
             //Add every other row with
             //pivotRow * negative of row's pivot-column cell
-            for (unsigned int i = 0; i < matrix.size(); ++i)
+            for (unsigned int row = 0; row < matrix.size(); ++row)
             {
-                if (i != pivot)
+                if (row != pivot)
                 {
-                    AddRows(matrix.at(i), matrix.at(pivot),
-                            -matrix.at(i).at(pivot));
+                    AddRows(matrix.at(row), matrix.at(pivot),
+                            -matrix.at(row).at(pivot));
                 }
             }
             //repeat for next column
@@ -167,12 +170,12 @@ void Matrix :: ReducedRowEchelon()
 }
 
 //
-double Matrix :: Determinant(const Matrix& matrix)
+double Matrix::Determinant(const Matrix& matrix)
 {
     //Det(A_11) = A_11
     if (matrix.rows <= 1 && matrix.columns <= 1)
     {
-        return matrix.matrix[0][0];
+        return matrix.matrix.at(0).at(0);
     }
     else
     {
@@ -180,7 +183,7 @@ double Matrix :: Determinant(const Matrix& matrix)
         //make a smaller matrix out of the non-pivot rows/columns
         for (unsigned int pivot = 0; pivot < matrix.columns; ++pivot)
         {
-            Matrix temp (matrix.rows - 1, matrix.columns - 1);
+            Matrix temp(matrix.rows - 1, matrix.columns - 1);
             unsigned int largerRow = 1, largerCol, smallerRow = 0, smallerCol;
 
             while (smallerRow < temp.rows)
@@ -196,60 +199,67 @@ double Matrix :: Determinant(const Matrix& matrix)
                     }
                     temp.matrix.at(smallerRow).at(smallerCol) = \
                         matrix.matrix.at(largerRow).at(largerCol);
+
                     largerCol++, smallerCol++;
                 }
                 largerRow++, smallerRow++;
             }
             //if pivot is even
-            if (! (pivot % 2))
+            if (!(pivot % 2))
             {
                 sum += matrix.matrix.at(0).at(pivot) * Determinant(temp);
             }
             else
             {
-                sum += -1 * matrix.matrix.at(0).at(pivot) * Determinant(temp);
+                sum -= matrix.matrix.at(0).at(pivot) * Determinant(temp);
             }
         }
         return sum;
     }
 }
 
-Matrix& Matrix :: operator= (const Matrix& m)
+Matrix& Matrix::operator=(const Matrix& matrixB)
 {
     //if param != this object
-    if (this != &m)
+    if (this != &matrixB)
     {
-        this->rows = m.rows;
-        this->columns = m.columns;
+        this->rows = matrixB.rows;
+        this->columns = matrixB.columns;
         this->matrix.resize(rows);
 
-        //rebuild matrix
-        for (unsigned int i =0; i < matrix.size(); ++i)
+        //empty rows
+        while (!this->matrix.empty())
         {
-            vector < double > temp (m.columns);
+            this->matrix.pop_back();
+        }
+
+        //rebuild matrix
+        for (unsigned int row = 0; row < matrix.size(); ++row)
+        {
+            vector<double> temp(columns);
             this->matrix.push_back(temp);
         }
 
         //copy cells from param matrix to this object
-        for (unsigned int i = 0; i < rows; ++i)
+        for (unsigned int row = 0; row < rows; ++row)
         {
-            for (unsigned int j = 0; j < columns; ++j)
+            for (unsigned int column = 0; column < columns; ++column)
             {
-                this->matrix.at(i).at(j) = m.matrix.at(i).at(j);
+                this->matrix.at(row).at(column) = \
+                    matrixB.matrix.at(row).at(column);
             }
         }
-
     }
     return *this;
 }
 
-Matrix Matrix:: operator* (const Matrix& m)
+Matrix Matrix::operator*(const Matrix& matrixB)
 {
     //if this object != param
-    if (this != &m)
+    if (this != &matrixB)
     {
         //if left matrix columns != right matrix rows you cannot A x B
-        if (this->columns != m.rows)
+        if (this->columns != matrixB.rows)
         {
             cout << "These cannot be multiplied. \n";
             return *this;
@@ -257,21 +267,23 @@ Matrix Matrix:: operator* (const Matrix& m)
         else
         {
             //make new matrix of proper size
-            Matrix temp(this->rows, m.columns);
+            Matrix temp(this->rows, matrixB.columns);
 
             //for each AxB_ij cell
-            for (unsigned int i = 0; i < temp.rows; ++i)
+            for (unsigned int row = 0; row < temp.rows; ++row)
             {
-                for (unsigned int j = 0; j < temp.columns; ++j)
+                for (unsigned int column = 0; column < temp.columns; ++column)
                 {
-                    double cell = 0;
+                    double cell = 0.0;
 
                     //cell = A_i0 * B_0j + A_i1 * B_1j + ... + A_ik * B_kj
-                    for (unsigned int k = 0; k < temp.rows; ++k)
+                    for (unsigned int iterator = 0; iterator < temp.rows;
+                         ++iterator)
                     {
-                        cell += this->matrix.at(i).at(k) * m.matrix.at(k).at(j);
+                        cell += this->matrix.at(row).at(iterator) * \
+                                matrixB.matrix.at(iterator).at(column);
                     }
-                    temp.matrix.at(i).at(j) = cell;
+                    temp.matrix.at(row).at(column) = cell;
                 }
             }
             return temp;
@@ -281,10 +293,20 @@ Matrix Matrix:: operator* (const Matrix& m)
 }
 
 
+int Matrix::GetRows()
+{ return rows; }
 
-int Matrix :: GetRows() {return rows;}
-void Matrix :: SetRows(int& rows) {this->rows = rows;}
-int Matrix :: GetColumns() {return columns;}
-void Matrix :: SetColumns(int& columns) {this->columns = columns;}
-vector < vector < double > >& Matrix :: GetMatrix() {return matrix;}
-void Matrix :: SetMatrix(vector < vector < double > >& matrix) {this->matrix = matrix;}
+void Matrix::SetRows(int& rows)
+{ this->rows = rows; }
+
+int Matrix::GetColumns()
+{ return columns; }
+
+void Matrix::SetColumns(int& columns)
+{ this->columns = columns; }
+
+vector<vector<double> >& Matrix::GetMatrix()
+{ return matrix; }
+
+void Matrix::SetMatrix(vector<vector<double> >& matrix)
+{ this->matrix = matrix; }
