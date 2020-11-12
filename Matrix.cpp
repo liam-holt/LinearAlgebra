@@ -2,6 +2,14 @@
 // Created by liam on 8/6/20.
 //
 
+//typedef std::vector< std::vector<double> > matrix
+
+//diagonalize determinant instead of recursion
+
+//systematic RREF
+
+//
+
 const bool Verbose = false; //debugging
 
 #include "Matrix.h"
@@ -121,6 +129,7 @@ void Matrix::SwapRows(vector<double>& row1, vector<double>& row2)
     }
 }
 
+//make systematic
 void Matrix::ReducedRowEchelon()
 {
     int pivot = 0;
